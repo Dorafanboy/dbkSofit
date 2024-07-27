@@ -15,6 +15,7 @@ import { delay } from '../../data/helpers/delayer';
 import { mainnet } from 'viem/chains';
 import { depositETHContractAddress, depositETHModuleName, gasLimit } from './depositETHData';
 import { depositETHABI } from '../../abis/depositETH';
+import { checkGwei } from '../../data/helpers/gweiChecker';
 
 export async function depositETH(account: PrivateKeyAccount) {
     printInfo(`Выполняю модуль ${depositETHModuleName}`);
@@ -74,6 +75,8 @@ export async function depositETH(account: PrivateKeyAccount) {
             await delay(Config.delayBetweenAction.minRange, Config.delayBetweenAction.maxRange, false);
         }
     }
+
+    await checkGwei();
 
     printInfo(`Буду производить deposit ${formatUnits(value, 18)} ETH`);
 

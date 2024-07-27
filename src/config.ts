@@ -3,6 +3,8 @@ import { defineChain } from 'viem';
 
 export class Config {
     public static readonly isShuffleWallets: boolean = true; // перемешивать ли строки в текстовом файле для приватных ключей
+    public static readonly maxGwei = 2; // до какого гвея будет использоваться скрипт
+    public static readonly delayBetweenGweiCheck: IDelayRange = { minRange: 0.3, maxRange: 1 }; // задержка перед получением нового гвея (в минутах)
     public static readonly retryCount: number = 15; // сколько попыток будет, чтобы получить новую сеть, значение для бриджа
     public static readonly delayBetweenAction: IDelayRange = { minRange: 2.2, maxRange: 4 }; // задержка между действиями (в секундах) в случае ошибки
     public static readonly delayBetweenAccounts: IDelayRange = { minRange: 37, maxRange: 45 }; // задержка между аккаунтами (в минутах)
