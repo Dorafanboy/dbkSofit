@@ -3,10 +3,11 @@ import fs from 'fs';
 import readline from 'readline';
 import { printError, printInfo, printSuccess } from './data/logger/logPrinter';
 import { delay } from './data/helpers/delayer';
-import { Config, DepositToDBKConfig } from './config';
+import { CheckDBKGenesisNFT, Config, DepositToDBKConfig, MintDBKGenesisNftConfig } from './config';
 import path from 'path';
 import { depositETH } from './core/depositETH/depositETH';
 import { mintDBKGenesis } from './core/mint/mint';
+import { checkNFTAmount } from './core/check/check';
 
 let account;
 
@@ -43,19 +44,27 @@ async function main() {
             account = privateKeyToAccount(<`0x${string}`>line);
             printInfo(`Start [${index + 1}/${count} - ${account.address}]\n`);
 
-            const result = await depositETH(account);
+            if (DepositToDBKConfig.isUse) {
+                const result = await depositETH(account);
 
-            if (result == true) {
-                await delay(
-                    DepositToDBKConfig.delayBeforeMint.minRange,
-                    DepositToDBKConfig.delayBeforeMint.maxRange,
-                    true,
-                );
-            } else {
-                await delay(Config.delayBetweenAction.minRange, Config.delayBetweenAction.maxRange, false);
+                if (result == true) {
+                    await delay(
+                        DepositToDBKConfig.delayBeforeMint.minRange,
+                        DepositToDBKConfig.delayBeforeMint.maxRange,
+                        true,
+                    );
+                } else {
+                    await delay(Config.delayBetweenAction.minRange, Config.delayBetweenAction.maxRange, false);
+                }
             }
 
-            await mintDBKGenesis(account);
+            if (MintDBKGenesisNftConfig.isUse) {
+                await mintDBKGenesis(account);
+            }
+
+            if (CheckDBKGenesisNFT.isCheckNFTAmount) {
+                await checkNFTAmount(account.address);
+            }
 
             printSuccess(`Ended [${index + 1}/${count} - ${account.address}]\n`);
 

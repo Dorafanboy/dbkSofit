@@ -2,8 +2,8 @@ import { IBridgeRange, IDelayRange, IFixedRange } from './data/utils/interfaces'
 import { defineChain } from 'viem';
 
 export class Config {
-    public static readonly isShuffleWallets: boolean = true; // перемешивать ли строки в текстовом файле для приватных ключей
-    public static readonly maxGwei = 2; // до какого гвея будет использоваться скрипт
+    public static readonly isShuffleWallets: boolean = false; // перемешивать ли строки в текстовом файле для приватных ключей
+    public static readonly maxGwei = 3; // до какого гвея будет использоваться скрипт
     public static readonly delayBetweenGweiCheck: IDelayRange = { minRange: 0.3, maxRange: 1 }; // задержка перед получением нового гвея (в минутах)
     public static readonly retryCount: number = 15; // сколько попыток будет, чтобы получить новую сеть, значение для бриджа
     public static readonly delayBetweenAction: IDelayRange = { minRange: 2.2, maxRange: 4 }; // задержка между действиями (в секундах) в случае ошибки
@@ -33,8 +33,10 @@ export const dbk = defineChain({
         default: { name: 'Explorer', url: 'https://scan.dbkchain.io/' },
     },
 });
+
 export class DepositToDBKConfig {
-    public static readonly minEthBridgeAmount: number = 0.00003; // ниже какого баланса не надо пополнять баланс в DBK Chain,
+    public static readonly isUse: boolean = false; // использовать ли депозит в DBK Chain
+    public static readonly minEthBridgeAmount: number = 0.000001; // ниже какого баланса не надо пополнять баланс в DBK Chain,
     public static readonly ethBridgeAmount: { range: IBridgeRange; fixed: IFixedRange } = {
         range: { minRange: 0.00003, maxRange: 0.0001 },
         fixed: { minRange: 6, maxRange: 8 },
@@ -43,9 +45,14 @@ export class DepositToDBKConfig {
 }
 
 export class MintDBKGenesisNftConfig {
+    public static readonly isUse: boolean = false; // минтить нфт в DBK Chain
     public static readonly nftAmount: IBridgeRange = {
-        minRange: 2,
-        maxRange: 3,
+        minRange: 4,
+        maxRange: 15,
     }; // сколкьо минтить нфт
     public static readonly delayBetweenMint: IDelayRange = { minRange: 1.5, maxRange: 3.5 }; // задержка между минтами
+}
+
+export class CheckDBKGenesisNFT {
+    public static readonly isCheckNFTAmount: boolean = true; // смотреть ли количество нфт на кошельке
 }

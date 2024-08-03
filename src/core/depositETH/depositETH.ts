@@ -107,7 +107,13 @@ export async function depositETH(account: PrivateKeyAccount) {
 
         const url = `${mainnet.blockExplorers?.default.url + '/tx/' + hash}`;
 
-        printSuccess(`Транзакция успешно отправлена. Хэш транзакции: ${url}\n`);
+        const transaction = await client
+            .waitForTransactionReceipt({ hash: <`0x${string}`>hash })
+            .then((result) => printSuccess(`Транзакция успешно отправлена. Хэш транзакции: ${url}\n`))
+            .catch((e) => {
+                printError(`Произошла ошибка во время выполнения модуля ${depositETHModuleName} - ${e}`);
+                return { request: undefined };
+            });
 
         return true;
     }
